@@ -1,0 +1,223 @@
+{
+    "contract": "contracts\\vulnerable.sol",
+    "number_of_findings": 3,
+    "findings": [
+        {
+            "vulnerability": "reentrancy-eth",
+            "impact": "High",
+            "confidence": "Medium",
+            "function": [
+                "withdraw"
+            ],
+            "source_file": "contracts\\vulnerable.sol",
+            "source_lines": [
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+            ],
+            "code_context": [
+                {
+                    "line": 12,
+                    "code": "function withdraw() public {"
+                },
+                {
+                    "line": 13,
+                    "code": ""
+                },
+                {
+                    "line": 14,
+                    "code": "uint256 amount = balances[msg.sender];"
+                },
+                {
+                    "line": 15,
+                    "code": ""
+                },
+                {
+                    "line": 16,
+                    "code": "(bool success, ) = msg.sender.call{value: amount}(\"\");"
+                },
+                {
+                    "line": 17,
+                    "code": ""
+                },
+                {
+                    "line": 18,
+                    "code": "require(success);"
+                },
+                {
+                    "line": 19,
+                    "code": ""
+                },
+                {
+                    "line": 20,
+                    "code": "balances[msg.sender] = 0;"
+                },
+                {
+                    "line": 21,
+                    "code": "}"
+                }
+            ],
+            "description": "Reentrancy in VulnerableBank.withdraw() (contracts/vulnerable.sol#12-21):\n\tExternal calls:\n\t- (success,None) = msg.sender.call{value: amount}() (contracts/vulnerable.sol#16)\n\tState variables written after the call(s):\n\t- balances[msg.sender] = 0 (contracts/vulnerable.sol#20)\n\tVulnerableBank.balances (contracts/vulnerable.sol#6) can be used in cross function reentrancies:\n\t- VulnerableBank.balances (contracts/vulnerable.sol#6)\n\t- VulnerableBank.deposit() (contracts/vulnerable.sol#8-10)\n\t- VulnerableBank.withdraw() (contracts/vulnerable.sol#12-21)\n",
+            "affected_elements": [
+                {
+                    "type": "function",
+                    "name": "withdraw",
+                    "source_file": "contracts/vulnerable.sol",
+                    "lines": [
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17,
+                        18,
+                        19,
+                        20,
+                        21
+                    ]
+                },
+                {
+                    "type": "node",
+                    "name": "(success,None) = msg.sender.call{value: amount}()",
+                    "source_file": "contracts/vulnerable.sol",
+                    "lines": [
+                        16
+                    ]
+                },
+                {
+                    "type": "node",
+                    "name": "balances[msg.sender] = 0",
+                    "source_file": "contracts/vulnerable.sol",
+                    "lines": [
+                        20
+                    ]
+                }
+            ]
+        },
+        {
+            "vulnerability": "solc-version",
+            "impact": "Informational",
+            "confidence": "High",
+            "function": [],
+            "source_file": "contracts\\vulnerable.sol",
+            "source_lines": [
+                2
+            ],
+            "code_context": [
+                {
+                    "line": 2,
+                    "code": "pragma solidity ^0.8.20;"
+                }
+            ],
+            "description": "Version constraint ^0.8.20 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)\n\t- VerbatimInvalidDeduplication\n\t- FullInlinerNonExpressionSplitArgumentEvaluationOrder\n\t- MissingSideEffectsOnSelectorAccess.\nIt is used by:\n\t- ^0.8.20 (contracts/vulnerable.sol#2)\n",
+            "affected_elements": [
+                {
+                    "type": "pragma",
+                    "name": "^0.8.20",
+                    "source_file": "contracts/vulnerable.sol",
+                    "lines": [
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "vulnerability": "low-level-calls",
+            "impact": "Informational",
+            "confidence": "High",
+            "function": [
+                "withdraw"
+            ],
+            "source_file": "contracts\\vulnerable.sol",
+            "source_lines": [
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+            ],
+            "code_context": [
+                {
+                    "line": 12,
+                    "code": "function withdraw() public {"
+                },
+                {
+                    "line": 13,
+                    "code": ""
+                },
+                {
+                    "line": 14,
+                    "code": "uint256 amount = balances[msg.sender];"
+                },
+                {
+                    "line": 15,
+                    "code": ""
+                },
+                {
+                    "line": 16,
+                    "code": "(bool success, ) = msg.sender.call{value: amount}(\"\");"
+                },
+                {
+                    "line": 17,
+                    "code": ""
+                },
+                {
+                    "line": 18,
+                    "code": "require(success);"
+                },
+                {
+                    "line": 19,
+                    "code": ""
+                },
+                {
+                    "line": 20,
+                    "code": "balances[msg.sender] = 0;"
+                },
+                {
+                    "line": 21,
+                    "code": "}"
+                }
+            ],
+            "description": "Low level call in VulnerableBank.withdraw() (contracts/vulnerable.sol#12-21):\n\t- (success,None) = msg.sender.call{value: amount}() (contracts/vulnerable.sol#16)\n",
+            "affected_elements": [
+                {
+                    "type": "function",
+                    "name": "withdraw",
+                    "source_file": "contracts/vulnerable.sol",
+                    "lines": [
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17,
+                        18,
+                        19,
+                        20,
+                        21
+                    ]
+                },
+                {
+                    "type": "node",
+                    "name": "(success,None) = msg.sender.call{value: amount}()",
+                    "source_file": "contracts/vulnerable.sol",
+                    "lines": [
+                        16
+                    ]
+                }
+            ]
+        }
+    ]
+}
